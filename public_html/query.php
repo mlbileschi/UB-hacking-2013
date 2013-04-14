@@ -23,13 +23,27 @@
 		}
 		return $tuples;
 	}
+	
+	function get_count() {
+		$i = 0;
+		foreach( $_GET['criteria'] as $cx ) {
+			if( $cx != "Choose one ..." ) ++$i;
+		}
 
+		return $i;
+	}
 	function get_x_axis_title() {
-		($_GET['criteria'][1] != "Choose one ...") ? $_GET['criteria'][1] : "";
+		if( get_count() == 1 )
+			return $_GET['entity'];
+
+		return ($_GET['criteria'][0] != "Choose one ...") ? $_GET['criteria'][0] : "";
 	}
 		
 	function get_y_axis_title() {
-		return $_GET['criteria'][0];
+		if( get_count() == 1 )
+			return $_GET['criteria'][0];
+
+		return $_GET['criteria'][1];
 	}
 
 	function get_graph_title($criteria) {
@@ -47,10 +61,10 @@
 	}
 
 	function print_criteria( $c = null ) {
-		$criterias = array( 'Choose one ...', 'Easiness', 'Availability', 'Interest', 'Quality', 'Clarity' );
+		$criterias = array( 'Choose one ...', 'Simplicity', 'Availability', 'Interest', 'Quality', 'Clarity' );
 		echo '<select name="criteria[] class="cmb-criteria span2">';
 		foreach( $criterias as $cx ) {
-			if( $cx == $c && !$set )
+			if( $cx == $c )
 				print "<option selected=\"true\">{$cx}</option>";
 			else
 				print "<option>{$cx}</option>";
@@ -276,9 +290,9 @@ EOF;
 						text: '<?= get_x_axis_title() ?>'
 					},
 					labels: {
-						enabled: <?= ( $count > 1 || count( $categories ) < 15) ? 'true' : 'false' ?>
+						enabled: <?= ( $count > 1 || count( $categories ) < 30) ? 'true' : 'false' ?>
 					}
-					<?php if( count( $categories ) < 15 ) { ?>
+					<?php if( count( $categories ) < 30 ) { ?>
 						,categories : <?= json_encode( $categories ) ?>
 					<?php } ?>
 				},
@@ -307,7 +321,7 @@ EOF;
 							//}
 							
 							$('#entity').val( new_entity );
-							//$('#frm-main').submit();
+							$('#frm-main').submit();
 							
 						}
 					}
