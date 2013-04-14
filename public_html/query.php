@@ -191,10 +191,10 @@ EOF;
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Professor Analytics</a>
+          <a class="brand" href="#">University Informer</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
+              <li class="active"><a href="query.php">Home</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -204,9 +204,9 @@ EOF;
     <div class="container">
 	<h3>Sample questions you may ask ...</h3>
 	<ul>
+		<li><a href="http://hack.script3r.com/query.php?entity=Course&criteria[]+class%3D=Quality&criteria[]+class%3D=Choose+one+...&restriction[]+class%3D=Course+Number&operator[]=One+of&keyword[]=421%2C473%2C489&restriction[]+class%3D=Department+Name&operator[]=Equals&keyword[]=Computer+Science&query=">Highest Quality CSE-4XX Elective?</a></li>
 		<li><a href="http://hack.script3r.com/query.php?entity=Course&criteria[]=Easiness&criteria[]=Choose+one+...&restriction[]=Department+Name&operator[]=Equals&keyword[]=Computer+Science&restriction[]=Course+Number&operator[]=Prefix&keyword[]=4&query=">Easiest CSE-400 level course?</a></li>
 		<li><a href="http://hack.script3r.com/query.php?entity=Professor&criteria[]=Quality&criteria[]=Choose+one+...&restriction[]=Course+Number&operator[]=Equals&keyword[]=421&restriction[]=Department+Name&operator[]=Equals&keyword[]=Computer+Science&query=">I need to take CSE-421. Which teacher should I pick, by quality?</a></li>
-		<li><a href="#">Debating whether taking CSE596, CSE531 or CSE510. Which should I pick?</a></li>
 	</ul>
 	<form action="query.php" method="get" id="frm-main">
 	 	<fieldset>
@@ -292,7 +292,7 @@ EOF;
 					labels: {
 						enabled: <?= ( $count > 1 || count( $categories ) < 30) ? 'true' : 'false' ?>
 					}
-					<?php if( count( $categories ) < 30 ) { ?>
+					<?php if( get_count() == 1 && count( $categories ) < 30 ) { ?>
 						,categories : <?= json_encode( $categories ) ?>
 					<?php } ?>
 				},
