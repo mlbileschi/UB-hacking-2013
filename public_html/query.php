@@ -47,7 +47,7 @@
 	}
 
 	function print_criteria( $c = null ) {
-		$criterias = array( 'Choose one ...', 'Easiness', 'Helpfulness', 'Interest', 'Quality', 'Clarity' );
+		$criterias = array( 'Choose one ...', 'Easiness', 'Availability', 'Interest', 'Quality', 'Clarity' );
 		echo '<select name="criteria[] class="cmb-criteria span2">';
 		foreach( $criterias as $cx ) {
 			if( $cx == $c && !$set )
@@ -102,7 +102,7 @@
 	}
 
 	$criteria_combo = <<<EOF
-<select name="criteria[]" class="cmb-criteria span2"><option>Choose one ...</option><option>Easiness</option><option>Helpfulness</option><option>Interest</option><option>Quality</option><option>Clarity</option></select>
+<select name="criteria[]" class="cmb-criteria span2"><option>Choose one ...</option><option>Simplicity</option><option>Availability</option><option>Interest</option><option>Quality</option><option>Clarity</option></select>
 EOF;
 	
 	$restriction_combo = <<<EOF
@@ -235,8 +235,7 @@ EOF;
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-
-    <script src="js/jquery.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		function add_constraint( c, op, pn ) {

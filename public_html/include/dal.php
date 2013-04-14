@@ -81,10 +81,10 @@ function get_selectors( $criteria ) {
 
 	foreach( $criteria as $c ) {
 		switch( $c ) {
-			case 'Easiness':
+			case 'Simplicity':
 				$fields[] = 'TRUNC(AVG(co.easiness),3)';
 			break;
-			case 'Helpfulness':
+			case 'Availability':
 				$fields[] = 'TRUNC(AVG(co.helpfulness),3)';
 			break;
 			case 'Interest':
