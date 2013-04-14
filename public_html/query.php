@@ -1,7 +1,7 @@
 <?php
 	require_once( 'include/dal.php' );
 	
-	function get_series_data( $rows ) {
+	function get_series_data( $rows, $c ) {
 		$tuples = array();
 		foreach( $rows as $row ) {
 			$els = array_splice( $row, 1, 3 );
@@ -10,6 +10,8 @@
 			$nel['name'] = $row[0];
 
 			$i = 120;
+			if( $c == 1 )
+				++$i;
 			foreach( $els as $el ) 
 				$nel[chr($i++)] = floatval( $el );
 
@@ -19,15 +21,25 @@
 	}
 
 	function get_x_axis_title() {
-		return $_POST['criteria'][0];
+		return $_GET['criteria'][0];
 	}
 		
 	function get_y_axis_title() {
-		return $_POST['criteria'][1];
+		return $_GET['criteria'][1];
 	}
 
 	function get_graph_title() {
 		return 'Graph Title';
+	}
+
+	function get_graph_type( $c ) {
+		if( $c == 3 )
+			return 'bubble';
+		
+		if( $c == 2 )
+			return 'scatteer';
+		
+		return 'column';
 	}
 
 	$criteria_combo = <<<EOF
@@ -37,24 +49,30 @@ EOF;
 	$restriction_combo = <<<EOF
 <select name="restriction[]" class="cmb-restriction" class="span2"><option>Course Number</option><option>Professor Name</option><option>Department Name</option></select><select name="operator[]" class="span2"><option>Contains</option><option>Prefix</option><option>Equals</option><option>In</option></select><input name="keyword[]" class="span2" type="text" /><br/>
 EOF;
-	if( isset( $_POST['query'] ) ) {
-		$entity = $_POST['entity'];
+	if( isset( $_GET['query'] ) ) {
+		$entity = $_GET['entity'];
 
-		$criteria = $_POST['criteria'];
-		foreach( $criteria as &$c ) $c = pg_escape_string($c);
+		$criteria = $_GET['criteria'];
+		$count = 0;
+		foreach( $criteria as &$c ) {
+			if( strlen( $c ) > 0 && $c != "Choose one ..." )
+				++$count;
+			$c = pg_escape_string($c);
+		}
 
-		$restrictions = $_POST['restriction'];
-		$operators = $_POST['operator'];
-		$keywords = $_POST['keyword'];
+		$restrictions = $_GET['restriction'];
+		$operators = $_GET['operator'];
+		$keywords = $_GET['keyword'];
 
 		$filters = array();
-		$total = count( $_POST['restriction'] );
+		$total = count( $_GET['restriction'] );
 		for( $i = 0; $i < $total; ++$i )
 			$filters[] = array( 'restriction' => pg_escape_string($restrictions[$i]), 
 					    'operator' => pg_escape_string($operators[$i]), 'keyword' => pg_escape_string($keywords[$i]) );
 
 		$result = process_query( $entity, $criteria, $filters );
-		$data = get_series_data( $result );
+		$data = get_series_data( $result, $count );
+		$graph_type = get_graph_type( $count );
 	}
 ?>
 <!DOCTYPE html>
@@ -117,7 +135,7 @@ EOF;
 		<li><a href="#">I need to tkake CSE-421. Which teacher, by quality?</a></li>
 		<li><a href="#">Debating whether taking CSE596, CSE531 or CSE510. Which should I pick?</a></li>
 	</ul>
-	<form action="query.php" method="post">
+	<form action="query.php" method="get">
 	 	<fieldset>
 			<legend>Query</legend>
 			<label>What are we looking for?</label>
@@ -142,7 +160,7 @@ EOF;
 		</fieldset>
 
 	<?php
-		if( isset( $_POST['query'] ) ) {
+		if( isset( $_GET['query'] ) ) {
 	?>
 	<div id="sample-chart">
 	
@@ -169,10 +187,10 @@ EOF;
 				e.stopPropagation();
 			});
 			
-			<?php if( isset( $_POST['query'] ) ) { ?>
+			<?php if( isset( $_GET['query'] ) ) { ?>
 			$('#sample-chart').highcharts({
 				chart: {
-					type: 'bubble',
+					type: '<?= $graph_type ?>',
 					zoomType: 'xy'
 				},
 

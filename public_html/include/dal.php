@@ -58,7 +58,7 @@ function restriction_to_sql( $r ) {
 				case 'Prefix':
 					return "d.depart_name LIKE '{$r['keyword']}%'";
 				case 'Contains':
-					return "d.depart_name LIKE '%{$r['keyword']}%";
+					return "d.depart_name LIKE '%{$r['keyword']}%'";
 				case 'In':
 					$k = "'" . join( "','", explode( ',', $r['keyword'] ) ) . "'";
 					return "d.depart_name IN($k)";
@@ -92,9 +92,8 @@ function get_selectors( $criteria ) {
 			case 'Clarity':
 				$fields[] = 'TRUNC(AVG(co.clarity),3)';
 			break;
-			
 			default:
-				die( 'bad criteria : ' . $c );
+				continue;
 		}
 	}
 
