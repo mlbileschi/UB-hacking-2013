@@ -46,61 +46,6 @@
 		return 'column';
 	}
 
-	function print_criteria( $c = null ) {
-		$criterias = array( 'Choose one ...', 'Easiness', 'Helpfulness', 'Interest', 'Quality', 'Clarity' );
-		echo '<select name="criteria[] class="cmb-criteria span2">';
-		foreach( $criterias as $cx ) {
-			if( $cx == $c && !$set )
-				print "<option selected=\"true\">{$cx}</option>";
-			else
-				print "<option>{$cx}</option>";
-		}
-		echo '</select>';
-	}
-	
-	function print_entity( $e ) {
-		$entities = array( 'Professor', 'Course', 'Department' );
-		echo '<select id="entity" name="entity" class="span2">';
-		foreach( $entities as $ex ) {
-			if( $ex == $e )
-				echo '<option selected="true">'. $ex . '</option>';
-			else
-				echo "<option>{$ex}</option>";
-		}
-		echo '</select>';
-
-	}
-
-	function print_restriction( $r = null ) {
-		$restrictions = array( 'Course Number', 'Professor Name', 'Department Name' );
-		$operators = array( 'Contains', 'Prefix', 'Equals', 'One of', 'Less Than', 'Greater Than' );
-		
-		echo '<select name="restriction[] class="cmb-restriction span2">';
-		$set = false;
-		foreach( $restrictions as $rx ) {
-			if( $r != null && $r['restriction'] == $rx && !$set ) {
-				echo '<option selected="true">' . $rx . '</option>';
-				$set = true;
-			} else {
-				echo "<option>{$rx}</option>";
-			}
-		}
-		echo '</select>';
-
-		echo '<select name="operator[]" class="span2">';
-		$set = false;
-		foreach( $operators as $o ) {
-			if( $r != null && $r['operator'] == $o && !$set ) {
-				echo '<option selected="true">' . $o . '</option>';
-				$set = true;
-			} else {
-				echo "<option>{$o}</option>";
-			}
-		}
-		echo '</select>';
-		echo '<input name="keyword[]" class="span2" type="text" value="' . $r['keyword'] . '" /><br/>';
-	}
-
 	$criteria_combo = <<<EOF
 <select name="criteria[]" class="cmb-criteria span2"><option>Choose one ...</option><option>Easiness</option><option>Helpfulness</option><option>Interest</option><option>Quality</option><option>Clarity</option></select>
 EOF;
@@ -194,33 +139,28 @@ EOF;
 		<li><a href="http://hack.script3r.com/query.php?entity=Professor&criteria[]=Quality&criteria[]=Choose+one+...&restriction[]=Course+Number&operator[]=Equals&keyword[]=421&restriction[]=Department+Name&operator[]=Equals&keyword[]=Computer+Science&query=">I need to tkake CSE-421. Which teacher, by quality?</a></li>
 		<li><a href="#">Debating whether taking CSE596, CSE531 or CSE510. Which should I pick?</a></li>
 	</ul>
-	<form action="query.php" method="get" id="frm-main">
+	<form action="query.php" method="get">
 	 	<fieldset>
 			<legend>Query</legend>
 			<label>What are we looking for?</label>
-			<?php print_entity( $entity ) ?>
-						
+			<select name="entity" class="span2">
+				<option>Professor</option>
+				<option>Course</option>
+				<option>Department</option>
+			</select>
+			
 			<div id="criteria-container">
 			<label>Criteria</label>
-			<?php if( isset($_GET['query'] )) {
-				foreach( $_GET['criteria'] as $c ) {
-					print_criteria( $c );
-				}
-			?>
-			<?php } else { echo $criteria_combo; } ?>
+			<?php echo $criteria_combo; ?>
 			</div>
 			<div id="restriction-container">
 			<label>Restriction</label>
-			<?php if( isset( $_GET['query'] ) ) {
-				foreach( $filters as $r ) {
-					print_restriction( $r );
-				}
-			} else { echo $restriction_combo; } ?>
+			<?php echo $restriction_combo; ?>
 			</div>
 			<br/>
 			<input type="hidden" name="query"/>
 			<button type="button" id="btn-add-criteria" class="btn btn-info">+ Restriction</button>
-			<button id="btn-submit" class="btn btn-primary">Search!</button>
+			<button class="btn btn-primary">Search!</button>
 		</fieldset>
 
 	<?php
@@ -239,10 +179,6 @@ EOF;
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-		function add_constraint( c, op, pn ) {
-			$('#restriction-container').append( '<select name="restriction[]" class="span2 cmb-restriction"><option>' + c + '</option></select><select name="operator[]" class="span2"><option>' + op + '</option></select><input type="text" name="keyword[]" class="span2" value="' + pn + '"/>');
-		}
-
 		$(document).ready(function() {
 			$(document.body).on('change', 'select[class^="cmb-criteria"]', function() {
 				var len = $('.cmb-criteria').length;
@@ -294,21 +230,7 @@ EOF;
 					data: <?= json_encode( $data ) ?>,
 					events: {
 						click: function(event) {
-							var new_entity = null;
-							var curr_entity = $('#entity').val();
-
-							if( curr_entity == 'Course' ) {
-								new_entity = 'Professor';
-								add_constraint( 'Course Number', 'Equals', event.point.name );
-							}
-							else if( curr_entity = 'Professor' ) {
-								new_entity = 'Course';
-								add_constraint( 'Professor', 'Equals', event.point.name );
-							}
-							
-							$('#entity').val( new_entity );
-							$('#frm-main').submit();
-							
+							alert(event.point.name);
 						}
 					}
 				}]

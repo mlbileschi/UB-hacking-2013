@@ -28,9 +28,13 @@ function restriction_to_sql( $r ) {
 					return "c.course_num LIKE '{$r['keyword']}%'";
 				case 'Contains':
 					return "c.course_num LIKE '%{$r['keyword']}%'";
-				case 'In':
+				case 'One of':
 					$k = "'" . join( "','", explode( ',', $r['keyword'] ) ) . "'";
 					return "c.course_num IN($k)";
+				case 'Less Than':
+					return "CAST( c.course_num AS INT ) <= {$r['keyword']}";
+				case 'Greater Than':
+					return "CAST( c.course_num AS INT ) >= {$r['keyword']}";
 				default:
 					die( 'bad operator:' . $r['operator'] );
 			}
@@ -44,7 +48,7 @@ function restriction_to_sql( $r ) {
 					return "p.prof_name LIKE '{$r['keyword']}%'";
 				case 'Contains':
 					return "p.prof_name LIKE '%{$r['keyword']}%'";
-				case 'In':
+				case 'One of':
 					$k = "'" . join( "','", explode( ',', $r['keyword'] ) ) . "'";
 					return "p.prof_name IN($k)";
 
@@ -59,7 +63,7 @@ function restriction_to_sql( $r ) {
 					return "d.depart_name LIKE '{$r['keyword']}%'";
 				case 'Contains':
 					return "d.depart_name LIKE '%{$r['keyword']}%'";
-				case 'In':
+				case 'One of':
 					$k = "'" . join( "','", explode( ',', $r['keyword'] ) ) . "'";
 					return "d.depart_name IN($k)";
 
@@ -133,10 +137,9 @@ function process_query( $entity, $criteria, $restrictions ) {
 	
 	$flat_clauses = join( ' AND ', $clauses );
 	$query .= $flat_clauses;
-	$query .= " GROUP BY {$entity_name}";
-
-	//var_dump( $query );
-	//returjn;
+	$query .= " GROUP BY {$entity_name} ";
+	$query .= " ORDER BY {$entity_name} ASC ";
+	
 	$res = pg_query( $conn, $query );
 	if( !$res ) die( 'query error: ' . $query );
 	
