@@ -10,12 +10,12 @@ import org.jsoup.select.Elements;
 
 public class UniversityIterator {
 
-	public static Collection<Rating> getUniversityRatings(String sid)
+	public static void getUniversityRatings(String sid)
 	{
-		Collection<Rating> universityRatings = new ArrayList<Rating>();
+		RatingParser.initializeWriter(sid);
 		
 		Document universityMainPage = null;
-		int pageNum = 5;
+		int pageNum = 1;
 		while(true)
 		{
 			// TODO: get JSP ID from URL
@@ -45,12 +45,12 @@ public class UniversityIterator {
 				{
 					Element profElement = curProf.getElementsByAttributeValue("class", "profName").iterator().next();
 					String tid = profElement.toString().split("\"")[3].split("=")[1];
-					universityRatings.addAll(RatingParser.getAllProfessorRatings(tid));
+					RatingParser.getAllProfessorRatings(tid);
 				}
 			}	
 			
 			pageNum++;
 		}
-		return universityRatings;
+		RatingParser.closeWriter();
 	}
 }

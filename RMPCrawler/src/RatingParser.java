@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -10,10 +13,28 @@ import org.jsoup.select.Elements;
 
 public class RatingParser {
 	
-	public static Collection<Rating> getAllProfessorRatings(String tid)
+	private static BufferedWriter ratingWriter;
+	
+	public static void initializeWriter(String fileName)
 	{
-		Collection<Rating> professorRatings = new ArrayList<Rating>();
-		
+		try {
+			ratingWriter = new BufferedWriter(new FileWriter(fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void closeWriter()
+	{
+		try {
+			ratingWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void getAllProfessorRatings(String tid)
+	{		
 		Document rmpPage = null;
 		int pageNum = 1;
 		while(true)
@@ -35,19 +56,16 @@ public class RatingParser {
 //				break;
 //			}
 
-			professorRatings.addAll(RatingParser.getRatings(rmpPage, tid));
+			RatingParser.getRatings(rmpPage, tid);
 			pageNum++;
 		}
-		return professorRatings;
 	}
 	
-	public static Collection<Rating> getRatings(Document rmpPage, String tid)
-	{
-		Collection<Rating> ratings = new ArrayList<Rating>();
-		
+	public static void getRatings(Document rmpPage, String tid)
+	{		
 		if(rmpPage.getElementsByAttributeValueContaining("style", "color:red").text().equals("All fields marked with an * are required."))
 		{
-			return ratings;
+			return;
 		}
 		
 		// Prof name
@@ -87,7 +105,7 @@ public class RatingParser {
 			Iterator<Element> classItr = curRecord.getElementsByAttributeValue("class", "class").iterator();
 			if(classItr.hasNext())
 			{
-				curRating.courseNum = classItr.next().text().replaceAll("[^\\d]", "");
+				curRating.setCourseNum(classItr.next().text().replaceAll("[^\\d]", ""));
 			}
 			
 			// Quality, easiness, helpfulness, interest, clarity
@@ -111,12 +129,13 @@ public class RatingParser {
 			}
 			
 			// Comment
-			curRating.comment = curRecord.getElementsByAttributeValue("class", "commentText").iterator().next().text();
-			
-			ratings.add(curRating);
-			System.out.print(curRating);
+			curRating.comment = curRecord.getElementsByAttributeValue("class", "commentText").iterator().next().text().replaceAll("\\t", " ");
+			try {
+				ratingWriter.write(curRating.toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return ratings;
 	}
 
 }

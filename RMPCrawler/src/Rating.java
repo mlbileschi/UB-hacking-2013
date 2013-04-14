@@ -6,11 +6,11 @@ class Rating
     String overallProfQual = "";
     String goodPoorAvgQual = "";
     String department = "";
-    String courseNum = "";
-    String easiness = "";
-    String helpfulness = "";
-    String clarity = "";
-    String raterInterest = "";
+    private String courseNum = "";
+    String easiness = "NULL";
+    String helpfulness = "NULL";
+    String clarity = "NULL";
+    String raterInterest = "NULL";
     String rootJSPTid = "";
     String timeStamp = "";
     String comment = "";
@@ -35,16 +35,19 @@ class Rating
         if(goodPoorAvgQual.toLowerCase().equals("good quality"))
         {
         	toReturn += "2\t";
-        }else if(goodPoorAvgQual.toLowerCase().equals("average quality")){
-        	toReturn += "1\t";
         }else if(goodPoorAvgQual.toLowerCase().equals("poor quality")){
         	toReturn += "0\t";
+        }else if(goodPoorAvgQual.toLowerCase().equals("average quality")){
+        	toReturn += "1\t";
+        }else{
+        	toReturn += "NULL\t";
         }
 
         toReturn += department + "\t";
         toReturn += courseNum + "\t";
         toReturn += easiness + "\t";
         toReturn += helpfulness + "\t";
+        toReturn += clarity + "\t";
         toReturn += raterInterest + "\t";
         toReturn += rootJSPTid + "\t";
         toReturn += timeStamp + "\t";
@@ -52,4 +55,18 @@ class Rating
         
         return toReturn;
     }
+
+	public void setCourseNum(String stringCourse) {
+		int intCourse = 0;
+		try{
+			intCourse = Integer.parseInt(stringCourse);
+		}catch(Exception e){
+			return;
+		}
+		
+		if(intCourse>=100 && intCourse<=999)
+		{
+			courseNum  = Integer.toString(intCourse);	
+		}
+	}
 }
