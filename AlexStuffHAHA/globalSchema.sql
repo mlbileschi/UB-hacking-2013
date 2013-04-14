@@ -29,7 +29,7 @@ create table Comments (
 	interest numeric(2,1),
 	quality int4,
 	clarity numeric(2,1),
-	comment_text varchar(350),
+	comment_text varchar(1000),
 	time_stamp timestamp,
 	course_id int4 references Courses(course_id),
 	prof_id int4 references Professors(prof_id)	

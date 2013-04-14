@@ -162,6 +162,7 @@ public class TextToSQL {
             rs.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			System.exit(0);
 		} finally {
 			try {
 				if(statement != null) statement.close();
@@ -209,6 +210,7 @@ public class TextToSQL {
             rs.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			System.exit(0);
 		} finally {
 			try {
 				if(statement != null) statement.close();
@@ -221,6 +223,12 @@ public class TextToSQL {
 
 	private static String insertComment(String easiness, String helpfulness, String raterInterest, String quality, String clarity, String comment, String timestamp, String course_id, String prof_id, Connection connection) {
 		System.out.println("insertComment: " + easiness + " " + helpfulness + " " + raterInterest + " " + quality + " " + clarity + " " + comment + " " + timestamp + " " + course_id + " " + prof_id);
+		if(easiness.equalsIgnoreCase("NULL")) easiness = null;
+		if(helpfulness.equalsIgnoreCase("NULL")) helpfulness = null;
+		if(raterInterest.equalsIgnoreCase("NULL")) raterInterest = null;
+		if(quality.equalsIgnoreCase("NULL")) quality = null;
+		if(clarity.equalsIgnoreCase("NULL")) clarity = null;
+		
 		String comment_id = null;
         PreparedStatement insertStmt = null;
         PreparedStatement statement = null;
@@ -289,6 +297,7 @@ public class TextToSQL {
             rs.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			System.exit(0);
 			return null;
 		} finally {
 			try {
@@ -346,6 +355,7 @@ public class TextToSQL {
             rs.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			System.exit(0);
 			return null;
 		} finally {
 			try {
@@ -402,6 +412,7 @@ public class TextToSQL {
             rs.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			System.exit(0);
 			return null;
 		} finally {
 			try {
@@ -455,6 +466,7 @@ public class TextToSQL {
             rs.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			System.exit(0);
 			return null;
 		} finally {
 			try {
@@ -505,6 +517,7 @@ public class TextToSQL {
             rs.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			System.exit(0);
 			return null;
 		} finally {
 			try {
