@@ -1,0 +1,14 @@
+University
+Professor
+OverallProfQual
+GoodPoorAvgQual ----- 2 is good, 1 is average 0 is poor
+Department
+CourseNum
+Easiness
+Helpfulness
+Clarity
+RaterInterest
+RootJSPTid
+timestamp
+Comment
+
